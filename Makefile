@@ -16,11 +16,9 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 
 # House-keeping build targets.
 
-.PHONY:  clean
+.PHONY: clean dir check
 
-all: $(LIB_DIR) \
-		 $(OBJ_DIR) \
-		 $(BIN_DIR) \
+all: dir \
 		 $(BIN_DIR)/sample_check \
 		 $(BIN_DIR)/cycle_detection_check
 
@@ -28,22 +26,15 @@ check:
 	$(BIN_DIR)/sample_check
 	$(BIN_DIR)/cycle_detection_check
 
-$(OBJ_DIR):
-	mkdir $(OBJDIR)
-
-$(LIB_DIR):
-	mkdir $(LIB_DIR)
-
-$(BIN_DIR):
-	mkdir $(BIN_DIR)
+dir:
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(LIB_DIR)
+	mkdir -p $(BIN_DIR)
 
 clean:
-	rm -f $(OBJ_DIR)/*
-	rm -f $(LIB_DIR)/*
-	rm -f $(BIN_DIR)/*
-	rmdir $(OBJ_DIR)
-	rmdir $(LIB_DIR)
-	rmdir $(BIN_DIR)
+	rm -rf $(OBJ_DIR)
+	rm -rf $(LIB_DIR)
+	rm -rf $(BIN_DIR)
 
 # Builds gtest.a and gtest_main.a.
 
