@@ -20,11 +20,13 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 
 all: dir \
 		 $(BIN_DIR)/sample_check \
-		 $(BIN_DIR)/cycle_detection_check
+		 $(BIN_DIR)/cycle_detection_check \
+		 $(BIN_DIR)/is_this_a_bst_check
 
 check:
 	$(BIN_DIR)/sample_check
 	$(BIN_DIR)/cycle_detection_check
+	$(BIN_DIR)/is_this_a_bst_check
 
 dir:
 	mkdir -p $(OBJ_DIR)
@@ -87,4 +89,15 @@ $(OBJ_DIR)/cycle_detection_test.o: $(TEST_DIR)/cycle_detection_test.cc $(GTEST_H
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
 
 $(BIN_DIR)/cycle_detection_check: $(OBJ_DIR)/cycle_detection.o $(OBJ_DIR)/cycle_detection_test.o $(LIB_DIR)/gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+# Builds is this a binary search tree
+
+$(OBJ_DIR)/is_this_a_bst.o: $(SRC_DIR)/is_this_a_bst.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
+
+$(OBJ_DIR)/is_this_a_bst_test.o: $(TEST_DIR)/is_this_a_bst_test.cc $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
+
+$(BIN_DIR)/is_this_a_bst_check: $(OBJ_DIR)/is_this_a_bst.o $(OBJ_DIR)/is_this_a_bst_test.o $(LIB_DIR)/gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
