@@ -21,12 +21,14 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 all: dir \
 		 $(BIN_DIR)/sample_check \
 		 $(BIN_DIR)/cycle_detection_check \
-		 $(BIN_DIR)/is_this_a_bst_check
+		 $(BIN_DIR)/is_this_a_bst_check \
+		 $(BIN_DIR)/huffman_decoding_check
 
 check:
 	$(BIN_DIR)/sample_check
 	$(BIN_DIR)/cycle_detection_check
 	$(BIN_DIR)/is_this_a_bst_check
+	$(BIN_DIR)/huffman_decoding_check
 
 dir:
 	mkdir -p $(OBJ_DIR)
@@ -100,4 +102,15 @@ $(OBJ_DIR)/is_this_a_bst_test.o: $(TEST_DIR)/is_this_a_bst_test.cc $(GTEST_HEADE
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
 
 $(BIN_DIR)/is_this_a_bst_check: $(OBJ_DIR)/is_this_a_bst.o $(OBJ_DIR)/is_this_a_bst_test.o $(LIB_DIR)/gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+# Builds huffman decoding
+
+$(OBJ_DIR)/huffman_decoding.o: $(SRC_DIR)/huffman_decoding.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
+
+$(OBJ_DIR)/huffman_decoding_test.o: $(TEST_DIR)/huffman_decoding_test.cc $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
+
+$(BIN_DIR)/huffman_decoding_check: $(OBJ_DIR)/huffman_decoding.o $(OBJ_DIR)/huffman_decoding_test.o $(LIB_DIR)/gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

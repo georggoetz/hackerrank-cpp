@@ -1,5 +1,5 @@
-#ifndef CYCLE_DETECTION_
-#define CYCLE_DETECTION_
+#ifndef CYCLE_DETECTION_H_
+#define CYCLE_DETECTION_H_
 
 namespace cycle_detection {
 
@@ -12,4 +12,4 @@ namespace cycle_detection {
   bool has_cycle(Node *head);
 }
 
-#endif // CYCLE_DETECTION_
+#endif // CYCLE_DETECTION_H_

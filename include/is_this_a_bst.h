@@ -1,5 +1,5 @@
-#ifndef IS_THIS_A_BST_
-#define IS_THIS_A_BST_
+#ifndef IS_THIS_A_BST_H_
+#define IS_THIS_A_BST_H_
 
 namespace is_this_a_bst {
 
@@ -13,4 +13,4 @@ namespace is_this_a_bst {
   bool checkBST(Node *root);
 }
 
-#endif // IS_THIS_A_BST_
+#endif // IS_THIS_A_BST_H_
