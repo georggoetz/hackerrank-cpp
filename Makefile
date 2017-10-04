@@ -19,16 +19,10 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 .PHONY: clean dir check
 
 all: dir \
-		 $(BIN_DIR)/sample_check \
-		 $(BIN_DIR)/cycle_detection_check \
-		 $(BIN_DIR)/is_this_a_bst_check \
-		 $(BIN_DIR)/huffman_decoding_check
+		 $(BIN_DIR)/sample_check
 
 check:
 	$(BIN_DIR)/sample_check
-	$(BIN_DIR)/cycle_detection_check
-	$(BIN_DIR)/is_this_a_bst_check
-	$(BIN_DIR)/huffman_decoding_check
 
 dir:
 	mkdir -p $(OBJ_DIR)
@@ -41,6 +35,11 @@ clean:
 	rm -rf $(BIN_DIR)
 
 # Builds gtest.a and gtest_main.a.
+
+# All Google Test headers.  Usually you shouldn't change this
+# definition.
+GTEST_HEADERS = $(GTEST_DIR)/include/gtest \
+	              $(GTEST_DIR)/include/gtest/internal
 
 # Usually you shouldn't tweak such internal variables, indicated by a
 # trailing _.
@@ -64,53 +63,16 @@ $(LIB_DIR)/gtest.a : $(OBJ_DIR)/gtest-all.o
 $(LIB_DIR)/gtest_main.a : $(OBJ_DIR)/gtest-all.o $(OBJ_DIR)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-# All Google Test headers.  Usually you shouldn't change this
-# definition.
-GTEST_HEADERS = $(GTEST_DIR)/include/gtest \
-	              $(GTEST_DIR)/include/gtest/internal
+SOURCES  = $(wildcard $(SRC_DIR)/*.cc)
+TEST_SOURCES  = $(wildcard $(TEST_DIR)/*.cc)
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.cc=$(OBJ_DIR)/%.o)
+OBJECTS += $(TEST_SOURCES:$(TEST_DIR)/%.cc=$(OBJ_DIR)/%.o)
 
-# Builds a sample test.  A test should link with either gtest.a or
-# gtest_main.a, depending on whether it defines its own main()
-# function.
-
-$(OBJ_DIR)/sample.o: $(SRC_DIR)/sample.cc
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
 
-$(OBJ_DIR)/sample_test.o: $(TEST_DIR)/sample_test.cc $(GTEST_HEADERS)
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
 
-$(BIN_DIR)/sample_check: $(OBJ_DIR)/sample.o $(OBJ_DIR)/sample_test.o $(LIB_DIR)/gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
-
-# Builds cyle detection
-
-$(OBJ_DIR)/cycle_detection.o: $(SRC_DIR)/cycle_detection.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
-
-$(OBJ_DIR)/cycle_detection_test.o: $(TEST_DIR)/cycle_detection_test.cc $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
-
-$(BIN_DIR)/cycle_detection_check: $(OBJ_DIR)/cycle_detection.o $(OBJ_DIR)/cycle_detection_test.o $(LIB_DIR)/gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
-
-# Builds is this a binary search tree
-
-$(OBJ_DIR)/is_this_a_bst.o: $(SRC_DIR)/is_this_a_bst.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
-
-$(OBJ_DIR)/is_this_a_bst_test.o: $(TEST_DIR)/is_this_a_bst_test.cc $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
-
-$(BIN_DIR)/is_this_a_bst_check: $(OBJ_DIR)/is_this_a_bst.o $(OBJ_DIR)/is_this_a_bst_test.o $(LIB_DIR)/gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
-
-# Builds huffman decoding
-
-$(OBJ_DIR)/huffman_decoding.o: $(SRC_DIR)/huffman_decoding.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
-
-$(OBJ_DIR)/huffman_decoding_test.o: $(TEST_DIR)/huffman_decoding_test.cc $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I $(INC_DIR) -c -o $@ $<
-
-$(BIN_DIR)/huffman_decoding_check: $(OBJ_DIR)/huffman_decoding.o $(OBJ_DIR)/huffman_decoding_test.o $(LIB_DIR)/gtest_main.a
+$(BIN_DIR)/sample_check: $(OBJECTS) $(LIB_DIR)/gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

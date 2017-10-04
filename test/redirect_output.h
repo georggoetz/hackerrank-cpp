@@ -9,11 +9,11 @@ namespace hackerrank {
 
   class RedirectOutput {
   public:
-    RedirectOutput() : saveBuffer_(std::cout.rdbuf()) {
+    RedirectOutput() : save_buffer_(std::cout.rdbuf()) {
       std::cout.rdbuf(buffer_.rdbuf());
     }
     virtual ~RedirectOutput() {
-      std::cout.rdbuf(saveBuffer_);
+      std::cout.rdbuf(save_buffer_);
     }
     std::string str() {
       return buffer_.str();
@@ -21,7 +21,7 @@ namespace hackerrank {
 
   private:
     std::stringstream buffer_;
-    std::streambuf *saveBuffer_;
+    std::streambuf *save_buffer_;
   };
 
 }
