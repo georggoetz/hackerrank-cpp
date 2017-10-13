@@ -18,6 +18,9 @@ namespace hackerrank {
     std::string str() {
       return buffer_.str();
     }
+    void clear() {
+      buffer_.str("");
+    }
 
   private:
     std::stringstream buffer_;
